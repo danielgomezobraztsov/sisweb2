@@ -1,6 +1,7 @@
-# sisweb2
+# Sistemas Web 2
+### Miembros
 - Alejandro Rodriguez
-- Alejandro Ferrer
+- Alejandro Fernandez
 - Arturo Мuñoz
 - Giulio Tizzano
 - Daniel Gomez
