@@ -3,5 +3,6 @@
 - Alejandro Rodriguez
 - Alejandro Fernandez
 - Arturo Мuñoz
+- Gabriel Diaz
 - Giulio Tizzano
 - Daniel Gomez
