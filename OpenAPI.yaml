@@ -1,0 +1,465 @@
+openapi: 3.1.0
+info:
+  title: API de Vulnerabilidades (Windows & Linux)
+  version: 0.1.0
+  description: API para consultar, registrar y gestionar vulnerabilidades conocidas en sistemas Windows y Linux
+
+paths:
+  /vulns:
+    get:
+      summary: GET todas las vulnerabilidades
+      description: Devuelve la lista paginada de vulnerabilidades. Soporta filtros por OS, severidad, distribución y CVE.
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/numElements'
+        - $ref: '#/components/parameters/os'
+        - $ref: '#/components/parameters/severity'
+        - $ref: '#/components/parameters/version'
+        - $ref: '#/components/parameters/cveId'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/arrayVulnsMin'
+        "422":
+          description: Parámetros incorrectos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mensaje'
+
+    post:
+      summary: POST nueva vulnerabilidad
+      description: Registra una nueva vulnerabilidad. Requiere autenticación.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/vuln'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mensaje'
+        "400":
+          description: Formato incorrecto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mensaje'
+        "401":
+          description: No autenticado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mensaje'
+        "422":
+          description: Error en JSON
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mensaje'
+  /vulns/{id}:
+    parameters:
+      - $ref: '#/components/parameters/id'
+    get:
+      summary: GET una vulnerabilidad concreta
+      description: Devuelve el detalle completo de una vulnerabilidad por su CVE-ID.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/vuln'
+        "404":
+          description: No existe una vulnerabilidad con ese ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mensaje'
+
+    put:
+      summary: Actualizar una vulnerabilidad concreta
+      description: Actualización completa de una vulnerabilidad existente. Operación idempotente.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/vuln'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mensaje'
+        "401":
+          description: No autenticado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mensaje'
+        "404":
+          description: No existe una vulnerabilidad con ese ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mensaje'
+        "422":
+          description: JSON incorrecto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mensaje'
+
+    delete:
+      summary: Eliminar una vulnerabilidad concreta
+      description: Elimina una vulnerabilidad por su CVE-ID. Nunca permite borrado masivo.
+      responses:
+        "204":
+          description: No Content — eliminada correctamente
+        "401":
+          description: No autenticado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mensaje'
+        "404":
+          description: No existe una vulnerabilidad con ese ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mensaje'
+  /vulns/os/{os}:
+    parameters:
+      - $ref: '#/components/parameters/os_path'
+    get:
+      summary: GET vulnerabilidades por sistema operativo
+      description: Devuelve vulnerabilidades filtradas por OS (windows o linux).
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/numElements'
+        - $ref: '#/components/parameters/severity'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/arrayVulnsMin'
+        "404":
+          description: OS no reconocido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mensaje'
+        "422":
+          description: Parámetros incorrectos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mensaje'
+
+  /vulns/os/{os}/version/{version}:
+    parameters:
+      - $ref: '#/components/parameters/os_path'
+      - $ref: '#/components/parameters/version_path'
+    get:
+      summary: GET vulnerabilidades por OS y versión
+      description: Devuelve vulnerabilidades filtradas por OS y versión concreta (ubuntu, debian, windows-11, windows-server-2022…).
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/numElements'
+        - $ref: '#/components/parameters/severity'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/arrayVulnsMin'
+        "404":
+          description: OS o versión no reconocidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mensaje'
+        "422":
+          description: Parámetros incorrectos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mensaje'
+  /vulns/apps:
+    get:
+      summary: GET vulnerabilidades de aplicaciones
+      description: Devuelve vulnerabilidades que afectan a aplicaciones de usuario. Filtra por OS con ?os=
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/numElements'
+        - $ref: '#/components/parameters/os'
+        - $ref: '#/components/parameters/severity'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/arrayVulnsMin'
+        "422":
+          description: Parámetros incorrectos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mensaje'
+
+  /vulns/apps/{id}:
+    parameters:
+      - $ref: '#/components/parameters/id'
+    get:
+      summary: GET detalle de vulnerabilidad en aplicación
+      description: Devuelve el detalle completo de una vulnerabilidad de aplicación por su CVE-ID.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/vuln'
+        "404":
+          description: No existe una vulnerabilidad de aplicación con ese ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mensaje'
+
+components:
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      description: CVE-ID de la vulnerabilidad (formato CVE-YYYY-XXXXX)
+      schema:
+        $ref: '#/components/schemas/cveId'
+
+    os_path:
+      name: os
+      in: path
+      required: true
+      description: Sistema operativo
+      schema:
+        $ref: '#/components/schemas/os'
+
+    version_path:
+      name: version
+      in: path
+      required: true
+      description: Versión del sistema operativo (distribución Linux o versión Windows)
+      schema:
+        $ref: '#/components/schemas/version'
+
+    page:
+      in: query
+      name: page
+      description: Número de página
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+
+    numElements:
+      in: query
+      name: numElements
+      description: Número de elementos por página
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 50
+        default: 10
+
+    os:
+      in: query
+      name: os
+      description: Filtrar por sistema operativo
+      required: false
+      schema:
+        $ref: '#/components/schemas/os'
+
+    severity:
+      in: query
+      name: severity
+      description: Filtrar por severidad CVSS
+      required: false
+      schema:
+        $ref: '#/components/schemas/severity'
+
+    version:
+      in: query
+      name: version
+      description: Filtrar por versión del OS (distribución Linux o versión Windows)
+      required: false
+      schema:
+        $ref: '#/components/schemas/version'
+
+    cveId:
+      in: query
+      name: cveId
+      description: Filtrar por CVE-ID exacto
+      required: false
+      schema:
+        $ref: '#/components/schemas/cveId'
+
+  schemas:
+    cveId:
+      type: string
+      pattern: '^CVE-\d{4}-\d{4,}$'
+      example: CVE-2024-21338
+
+    os:
+      type: string
+      enum: ["windows", "linux"]
+
+    version:
+      type: string
+      description: Versión del OS — distribuciones Linux o versiones Windows
+      enum:
+        # Linux
+        - ubuntu
+        - debian
+        - alpine
+        - arch
+        - fedora
+        - centos
+        - rhel
+        - opensuse
+        # Windows
+        - windows-10
+        - windows-11
+        - windows-server-2019
+        - windows-server-2022
+        - windows-server-2025
+
+    severity:
+      type: string
+      enum: ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+
+    cvss:
+      type: object
+      required: [version, score, severity, vector]
+      properties:
+        version:
+          type: string
+          enum: ["3.0", "3.1"]
+        score:
+          type: number
+          minimum: 0.0
+          maximum: 10.0
+          example: 7.8
+        severity:
+          $ref: '#/components/schemas/severity'
+        vector:
+          type: string
+          example: CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H
+
+    arrayVulnsMin:
+      type: array
+      items:
+        $ref: '#/components/schemas/vulnMin'
+
+    vulnMin:
+      type: object
+      description: Versión resumida de una vulnerabilidad para listados
+      required: [id, titulo, os, severity, fechaPublicacion]
+      properties:
+        id:
+          $ref: '#/components/schemas/cveId'
+        titulo:
+          type: string
+          example: Windows Hyper-V Elevation of Privilege Vulnerability
+        os:
+          $ref: '#/components/schemas/os'
+        version:
+          $ref: '#/components/schemas/version'
+        severity:
+          $ref: '#/components/schemas/severity'
+        fechaPublicacion:
+          type: string
+          format: date
+          example: "2024-07-09"
+        explotadaActivamente:
+          type: boolean
+          description: Presente en el catálogo CISA KEV
+      additionalProperties: false
+
+    vuln:
+      type: object
+      description: Detalle completo de una vulnerabilidad
+      required: [id, titulo, descripcion, os, severity, cvss, fechaPublicacion, fuente]
+      properties:
+        id:
+          $ref: '#/components/schemas/cveId'
+        titulo:
+          type: string
+          example: Windows Hyper-V Elevation of Privilege Vulnerability
+        descripcion:
+          type: string
+          example: Windows Hyper-V contains a privilege escalation vulnerability...
+        os:
+          $ref: '#/components/schemas/os'
+        version:
+          $ref: '#/components/schemas/version'
+        tipoVuln:
+          type: string
+          enum: ["RCE", "EoP", "DoS", "InfoDisclosure", "AuthBypass", "SQLi", "XSS", "Other"]
+          description: Tipo principal de vulnerabilidad
+        severity:
+          $ref: '#/components/schemas/severity'
+        cvss:
+          $ref: '#/components/schemas/cvss'
+        fechaPublicacion:
+          type: string
+          format: date
+          example: "2024-07-09"
+        fechaActualizacion:
+          type: string
+          format: date
+        explotadaActivamente:
+          type: boolean
+          description: Presente en el catálogo CISA KEV
+        fuente:
+          type: string
+          enum: ["NVD", "MSRC", "CVE.org", "CISA-KEV", "OSV", "Exploit-DB"]
+          description: Fuente de origen del registro
+        urlParche:
+          type: string
+          format: uri
+          example: https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-21338
+        referencias:
+          type: array
+          items:
+            type: string
+            format: uri
+
+    mensaje:
+      type: object
+      required: [codigo, texto]
+      properties:
+        codigo:
+          type: integer
+          example: 404
+        texto:
+          type: string
+          example: No existe una vulnerabilidad con ese ID
+        descripcion:
+          type: string
+          example: El CVE-ID proporcionado no se encontró en la base de datos
