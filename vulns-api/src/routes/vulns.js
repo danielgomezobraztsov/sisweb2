@@ -2,7 +2,7 @@ const router = require('express').Router();
 const ctrl   = require('../controllers/vulnController');
 const auth   = require('../middleware/auth');
 
-// ⚠️  IMPORTANTE: las rutas literales ANTES que /:id para evitar conflictos en Express
+//IMPORTANTE: las rutas literales ANTES que /:id para evitar conflictos en Express
 
 // ── /vulns/apps ───────────────────────────────────────────────────────────────
 router.get('/apps',     ctrl.getApps);

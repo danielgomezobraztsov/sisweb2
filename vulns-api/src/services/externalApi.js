@@ -129,7 +129,7 @@ function startPeriodicSync(intervalMs = 3_600_000) {
   // Primera ejecución al arrancar (sin bloquear el servidor)
   setTimeout(() => syncAll(), 5000);
   setInterval(() => syncAll(), intervalMs);
-  console.log(`🔄 Sync con APIs externas cada ${intervalMs / 60000} min`);
+  console.log(`Sync con APIs externas cada ${intervalMs / 60000} min`);
 }
 
 module.exports = { syncAll, syncFromNVD, syncFromCISA, startPeriodicSync };

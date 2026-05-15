@@ -8,8 +8,8 @@ const INTERVAL = parseInt(process.env.SYNC_INTERVAL) || 3_600_000; // 1h
 
 connectDB().then(() => {
   app.listen(PORT, () => {
-    console.log(`🚀 Servidor arriba en http://localhost:${PORT}`);
-    console.log(`📄 Entorno: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`Servidor arriba en http://localhost:${PORT}`);
+    console.log(`Entorno: ${process.env.NODE_ENV || 'development'}`);
   });
   // Sincronización en segundo plano con NVD y CISA (no bloquea si fallan)
   startPeriodicSync(INTERVAL);

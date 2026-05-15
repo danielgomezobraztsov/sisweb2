@@ -10,7 +10,7 @@ async function connectDB() {
   console.log(`✅ MongoDB conectado: ${uri}`);
 
   mongoose.connection.on('disconnected', () => {
-    console.warn('⚠️  MongoDB desconectado');
+    console.warn('MongoDB desconectado');
     connected = false;
   });
 }
