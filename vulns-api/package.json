@@ -1,0 +1,25 @@
+{
+  "name": "vulnerabilities-api",
+  "version": "1.0.0",
+  "description": "API REST para consultar, registrar y gestionar vulnerabilidades en sistemas Windows y Linux",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "generate-dataset": "node scripts/generateDataset.js",
+    "load-data": "node scripts/loadData.js",
+    "setup": "npm run generate-dataset && npm run load-data"
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "fast-xml-parser": "^5.8.0",
+    "mongoose": "^8.5.1",
+    "uuid": "^10.0.0",
+    "xmlbuilder2": "^4.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
