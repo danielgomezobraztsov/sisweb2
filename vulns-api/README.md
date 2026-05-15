@@ -1,10 +1,13 @@
-# Vulnerabilities API
-
-API REST para consultar, registrar y gestionar vulnerabilidades conocidas en sistemas **Windows** y **Linux** (CVEs).
+# Sistemas Web 2
 
 ## Miembros del grupo
+- Alejandro Rodriguez
+- Alejandro Fernandez
+- Arturo Мuñoz
+- Gabriel Diaz
+- Giulio Tizzano
+- Daniel Gomez
 
-> Rellenar aquí los nombres del grupo antes de la entrega.
 
 ## Estructura del proyecto
 
