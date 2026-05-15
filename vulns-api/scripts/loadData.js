@@ -22,7 +22,7 @@ async function main() {
   const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/vulnsdb';
   console.log(`Conectando a MongoDB: ${uri}`);
   await mongoose.connect(uri);
-  console.log('✅ Conectado\n');
+  console.log('Conectado\n');
 
   // ── 1. Cargar Aplicaciones ────────────────────────────────────────────────
   const appsFile = path.join(DATA_DIR, 'applications.json');
@@ -30,15 +30,15 @@ async function main() {
     await Application.deleteMany({});
     const apps = JSON.parse(fs.readFileSync(appsFile, 'utf8'));
     await Application.insertMany(apps);
-    console.log(`📦 Applications: ${apps.length} documentos cargados`);
+    console.log(`Applications: ${apps.length} documentos cargados`);
   } else {
-    console.warn('⚠️  data/applications.json no encontrado, saltando...');
+    console.warn('data/applications.json no encontrado, saltando...');
   }
 
   // ── 2. Cargar Vulnerabilidades ────────────────────────────────────────────
   const vulnsFile = path.join(DATA_DIR, 'vulns.json');
   if (!fs.existsSync(vulnsFile)) {
-    console.error('❌ data/vulns.json no encontrado. Ejecuta primero: npm run generate-dataset');
+    console.error('data/vulns.json no encontrado. Ejecuta primero: npm run generate-dataset');
     process.exit(1);
   }
 
@@ -52,15 +52,15 @@ async function main() {
     const batch = rawVulns.slice(i, i + BATCH);
     await Vuln.insertMany(batch, { ordered: false });
     loaded += batch.length;
-    process.stdout.write(`\r📦 Vulnerabilidades: ${loaded}/${rawVulns.length}`);
+    process.stdout.write(`\rVulnerabilidades: ${loaded}/${rawVulns.length}`);
   }
-  console.log(`\n✅ Vulnerabilidades: ${loaded} documentos cargados`);
+  console.log(`\nVulnerabilidades: ${loaded} documentos cargados`);
 
   // ── 3. Crear API Key por defecto ──────────────────────────────────────────
   const defaultKey = process.env.API_KEY || 'dev-api-key-12345';
   await ApiKey.deleteMany({ name: 'default' });
   await ApiKey.create({ key: defaultKey, name: 'default', active: true });
-  console.log(`🔑 API Key por defecto creada: ${defaultKey.slice(0, 8)}****`);
+  console.log(`API Key por defecto creada: ${defaultKey.slice(0, 8)}****`);
 
   // ── Resumen ───────────────────────────────────────────────────────────────
   const totalVulns = await Vuln.countDocuments();
@@ -74,7 +74,7 @@ async function main() {
   console.log('──────────────────────────────────────────────────────────\n');
 
   await mongoose.disconnect();
-  console.log('✅ Datos cargados correctamente. ¡Listo para arrancar el servidor!');
+  console.log('Datos cargados correctamente. ¡Listo para arrancar el servidor!');
 }
 
 main().catch(err => {

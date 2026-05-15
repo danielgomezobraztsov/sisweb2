@@ -1,14 +1,9 @@
 const mongoose = require('mongoose');
 
-/**
- * Colección: applications
- * Representa aplicaciones de usuario que pueden tener vulnerabilidades (isAppVuln=true en Vuln).
- * Es la segunda colección del proyecto.
- */
 const applicationSchema = new mongoose.Schema({
-  name:     { type: String, required: true, trim: true },
-  vendor:   { type: String, trim: true },
-  version:  { type: String },
+  name: { type: String, required: true, trim: true },
+  vendor: { type: String, trim: true },
+  version: String,
   category: {
     type: String,
     enum: ['browser', 'office', 'database', 'webserver', 'runtime', 'multimedia', 'security', 'other'],
@@ -19,18 +14,15 @@ const applicationSchema = new mongoose.Schema({
     enum: ['windows', 'linux', 'cross-platform'],
     default: 'cross-platform',
   },
-  description: { type: String },
-}, {
-  timestamps: true,
-  toJSON: {
-    virtuals: true,
-    transform(_doc, ret) {
-      ret.id = ret._id;
-      delete ret._id;
-      delete ret.__v;
-      return ret;
-    },
-  },
-});
+  description: String,
+  externalRefs: [{
+    sourceCode: String,
+    externalId: String,
+    url: String,
+  }],
+}, { timestamps: true });
 
-module.exports = mongoose.model('Application', applicationSchema);
+applicationSchema.index({ name: 1, vendor: 1 }, { unique: true });
+applicationSchema.index({ category: 1, os: 1 });
+
+module.exports = mongoose.model('Application', applicationSchema, 'applications');
