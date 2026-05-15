@@ -1,12 +1,15 @@
-# 🛡️ Vulnerabilities API
+# Sistemas Web 2
 
-API REST para consultar, registrar y gestionar vulnerabilidades conocidas en sistemas **Windows** y **Linux** (CVEs).
+## Miembros del grupo
+- Alejandro Rodriguez
+- Alejandro Fernandez
+- Arturo Мuñoz
+- Gabriel Diaz
+- Giulio Tizzano
+- Daniel Gomez
 
-## 👥 Miembros del grupo
 
-> Rellenar aquí los nombres del grupo antes de la entrega.
-
-## 🗂️ Estructura del proyecto
+## Estructura del proyecto
 
 ```
 vulns-api/
@@ -36,7 +39,7 @@ vulns-api/
 └── OpenAPI.yaml               # Descripción del servicio
 ```
 
-## 🚀 Instalación y puesta en marcha
+## Instalación y puesta en marcha
 
 ### Requisitos previos
 - Node.js >= 18
@@ -78,7 +81,7 @@ El servidor arrancará en `http://localhost:3000`.
 
 ---
 
-## 📡 Endpoints
+## Endpoints
 
 Todos los endpoints soportan respuesta en **JSON** (por defecto) o **XML** (con `Accept: application/xml`).  
 Los endpoints de escritura (POST, PUT, DELETE) requieren el header `X-API-Key`.
@@ -88,10 +91,10 @@ Los endpoints de escritura (POST, PUT, DELETE) requieren el header `X-API-Key`.
 | Método | Ruta | Descripción | Auth |
 |--------|------|-------------|------|
 | `GET`  | `/vulns` | Lista paginada con filtros | No |
-| `POST` | `/vulns` | Crear nueva vulnerabilidad | ✅ |
+| `POST` | `/vulns` | Crear nueva vulnerabilidad | SI |
 | `GET`  | `/vulns/:id` | Detalle por CVE-ID | No |
-| `PUT`  | `/vulns/:id` | Actualización completa | ✅ |
-| `DELETE` | `/vulns/:id` | Eliminar por CVE-ID | ✅ |
+| `PUT`  | `/vulns/:id` | Actualización completa | SI |
+| `DELETE` | `/vulns/:id` | Eliminar por CVE-ID | SI |
 | `GET`  | `/vulns/os/:os` | Filtrar por OS | No |
 | `GET`  | `/vulns/os/:os/version/:version` | Filtrar por OS+versión | No |
 | `GET`  | `/vulns/apps` | Vulnerabilidades de aplicaciones | No |
@@ -110,7 +113,7 @@ Los endpoints de escritura (POST, PUT, DELETE) requieren el header `X-API-Key`.
 
 ---
 
-## 🔐 Autenticación
+## Autenticación
 
 Las operaciones de escritura requieren el header:
 ```
@@ -121,7 +124,7 @@ La clave por defecto en desarrollo se configura en `API_KEY` del `.env`.
 
 ---
 
-## 📨 Formatos de mensaje
+## Formatos de mensaje
 
 ### JSON (por defecto)
 
@@ -176,7 +179,7 @@ La clave por defecto en desarrollo se configura en `API_KEY` del `.env`.
 
 ---
 
-## 🌐 APIs externas integradas
+## APIs externas integradas
 
 La API sincroniza datos en segundo plano desde dos fuentes externas.  
 **Si alguna API externa está caída, la API sigue funcionando normalmente con los datos locales.**
@@ -191,7 +194,7 @@ Para NVD: registrarse en https://nvd.nist.gov/developers/request-an-api-key para
 
 ---
 
-## 🗄️ Modelo de datos (MongoDB)
+## Modelo de datos (MongoDB)
 
 ### Colección `vulns` (principal, 1200+ docs)
 Campos: `id`, `titulo`, `descripcion`, `os`, `version`, `tipoVuln`, `severity`, `cvss`, `fechaPublicacion`, `fechaActualizacion`, `explotadaActivamente`, `fuente`, `urlParche`, `referencias`, `isAppVuln`
@@ -204,7 +207,7 @@ Campos: `key`, `name`, `active`, `usages`, `lastUsed`
 
 ---
 
-## 🧪 Ejemplos de uso con curl
+## Ejemplos de uso con curl
 
 ```bash
 # Listar vulnerabilidades críticas de Windows (página 1)
