@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
-const applicationSchema = new mongoose.Schema(
+const systemSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: true
     },
-    vendor: {
+    os: {
       type: String,
       required: true
     },
@@ -20,4 +20,4 @@ const applicationSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Application", applicationSchema);
+module.exports = mongoose.model("System", systemSchema);

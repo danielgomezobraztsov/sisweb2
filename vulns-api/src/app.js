@@ -1,39 +1,39 @@
-const express = require('express');
+require("dotenv").config();
+
+const express = require("express");
+const cors = require("cors");
+
+const connectDB = require("./db");
+const vulnRoutes = require("./routes/vuln.routes");
+
 const app = express();
 
-// ── Middlewares globales ──────────────────────────────────────────────────────
+connectDB();
+
+app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
-// Parser de cuerpos XML  (Content-Type: application/xml)
-const { parseXmlBody } = require('./middleware/parseXml');
-app.use(parseXmlBody);
+app.use("/vulns", vulnRoutes);
 
-// Cabeceras CORS básicas
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, X-API-Key');
-  if (req.method === 'OPTIONS') return res.sendStatus(204);
-  next();
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
+    return res.status(422).json({
+      codigo: 422,
+      texto: "JSON incorrecto",
+      descripcion: err.message
+    });
+  }
+
+  return res.status(500).json({
+    codigo: 500,
+    texto: "Error interno",
+    descripcion: err.message
+  });
 });
 
-// ── Rutas ─────────────────────────────────────────────────────────────────────
-app.use('/vulns', require('./routes/vulns'));
+const PORT = process.env.PORT || 3000;
 
-// Ruta de salud
-app.get('/health', (_req, res) => res.json({ status: 'ok' }));
-
-// 404 genérico
-app.use((_req, res) => {
-  res.status(404).json({ codigo: 404, texto: 'Ruta no encontrada' });
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
-
-// Manejador de errores global
-// eslint-disable-next-line no-unused-vars
-app.use((err, _req, res, _next) => {
-  console.error(err);
-  res.status(500).json({ codigo: 500, texto: 'Error interno del servidor', descripcion: err.message });
-});
-
-module.exports = app;

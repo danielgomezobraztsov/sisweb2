@@ -1,23 +1,27 @@
 {
-  "name": "vulnerabilities-api",
+  "name": "vulns-api",
   "version": "1.0.0",
-  "description": "API REST para consultar, registrar y gestionar vulnerabilidades en sistemas Windows y Linux",
-  "main": "src/server.js",
+  "description": "REST API for vulnerability management using Node.js and MongoDB",
+  "main": "src/app.js",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
-    "generate-dataset": "node scripts/generateDataset.js",
-    "load-data": "node scripts/loadData.js",
-    "setup": "npm run generate-dataset && npm run load-data"
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "seed": "node src/scripts/seed.js",
+    "sync:nvd": "node scripts/syncNvd.js",
+    "sync:cisa": "node scripts/syncCisa.js",
+    "sync:msrc": "node scripts/syncMsrc.js",
+    "sync:osv": "node scripts/syncOsv.js",
+    "sync:all": "node scripts/syncAll.js",
+    "sync:exploitdb": "node scripts/syncExploitDb.js"
   },
   "dependencies": {
-    "axios": "^1.7.2",
-    "dotenv": "^16.4.5",
+    "axios": "^1.16.1",
+    "cors": "^2.8.5",
+    "csv-parse": "^6.2.1",
+    "dotenv": "^16.6.1",
     "express": "^4.19.2",
-    "fast-xml-parser": "^5.8.0",
-    "mongoose": "^8.5.1",
-    "uuid": "^10.0.0",
-    "xmlbuilder2": "^4.0.3"
+    "mongoose": "^8.24.0",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"
